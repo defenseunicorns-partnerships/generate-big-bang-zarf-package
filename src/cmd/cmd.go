@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Use:     "VERSION",
 	Args:    cobra.ExactArgs(1),
 	Short:   "Creates a zarf.yaml and associated manifests for a Big Bang Zarf package in the current directory",
-	Example: "main.go 2.34.0 --values-file-manifests=my-configmap.yaml,my-secret.yaml",
+	Example: "go run main.go 2.34.0 --values-file-manifests=my-configmap.yaml,my-secret.yaml",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		bbOpts.Version = args[0]
 		bbOpts.BaseDir = "."
