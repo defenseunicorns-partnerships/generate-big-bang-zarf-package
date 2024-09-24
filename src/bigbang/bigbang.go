@@ -43,7 +43,6 @@ type Opts struct {
 	Repo                string
 	Version             string
 	BaseDir             string
-	KubeVersion         string
 }
 
 const (
@@ -155,7 +154,9 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		path.Join(tmpDir, bb),
 		path.Join(tmpDir, bb, "values"),
 		helm.WithVariableConfig(&variables.VariableConfig{}),
-		helm.WithKubeVersion(bbOpts.KubeVersion),
+		// Helm does a check to make sure your kube version is compatible
+		// since we're just templating the chart we just want to make sure we're above the minimum version
+		helm.WithKubeVersion("1.99.0"),
 	)
 
 	// Download the chart from Git and save it to a temporary directory.

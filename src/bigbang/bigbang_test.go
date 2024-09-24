@@ -506,7 +506,6 @@ func TestCreate(t *testing.T) {
 				Repo:                tt.repo,
 				SkipFlux:            tt.skipFlux,
 				BaseDir:             tempDir,
-				KubeVersion:         "v1.30.0",
 			}
 			err := Create(context.Background(), bbOpts)
 			require.NoError(t, err)
