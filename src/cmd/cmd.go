@@ -9,12 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var bbOpts bigbang.Opts
+
 var rootCmd = &cobra.Command{
-	Use:           "zarf COMMAND",
-	Args:          cobra.MaximumNArgs(1),
-	SilenceUsage:  true,
-	SilenceErrors: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Use:     "VERSION",
+	Args:    cobra.ExactArgs(1),
+	Short:   "Creates a zarf.yaml and associated manifests for a Big Bang Zarf package in the current directory",
+	Example: "main.go 2.34.0 --values-file-manifests=my-configmap.yaml,my-secret.yaml",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		bbOpts.Version = args[0]
+		bbOpts.BaseDir = "."
+		return bigbang.Create(cmd.Context(), bbOpts)
 	},
 }
 
@@ -27,17 +32,11 @@ func Execute(ctx context.Context) {
 	os.Exit(1)
 }
 
-var bbOpts bigbang.Opts
 
-var bigBangGenerateCommand = &cobra.Command{
-	Use:     "big-bang VERSION",
-	Aliases: []string{"bb"},
-	Args:    cobra.ExactArgs(1),
-	Short:   "Creates a zarf.yaml and associated manifests for a Big Bang Zarf package in the current directory",
-	Example: "zarf dev generate big-bang 2.3.4 --values-file-manifests=my-configmap.yaml,my-secret.yaml",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		bbOpts.Version = args[0]
-		bbOpts.BaseDir = "."
-		return bigbang.Create(cmd.Context(), bbOpts)
-	},
+func init() {
+	rootCmd.Flags().StringSliceVar(&bbOpts.ValuesFileManifests, "values-file-manifests", nil, "A comma separated list of configmap or secret manifests to pass to the Big Bang Helm Release. See https://fluxcd.io/flux/components/helm/helmreleases/#values-references")
+	rootCmd.Flags().BoolVar(&bbOpts.SkipFlux, "skip-flux", false, "Skip the Flux component in the Big Bang package")
+	rootCmd.Flags().BoolVar(&bbOpts.Airgap, "airgap", true, "Whether or not this package is targeting an airgap environment")
+	rootCmd.Flags().StringVar(&bbOpts.Repo, "repo", "https://repo1.dso.mil/big-bang/bigbang", "The git repository to use for the Big Bang package")
+	rootCmd.Flags().StringVar(&bbOpts.KubeVersion, "kube-version", "", "Override the default KubeVersion used during the helm template portion of generate")
 }
