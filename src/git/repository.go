@@ -15,8 +15,6 @@ import (
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
-	"github.com/go-git/go-git/v5/plumbing/transport"
-	"github.com/go-git/go-git/v5/plumbing/transport/http"
 
 	"github.com/zarf-dev/zarf/src/pkg/message"
 	"github.com/zarf-dev/zarf/src/pkg/transform"
@@ -144,87 +142,6 @@ func (r *Repository) Path() string {
 	return r.path
 }
 
-// Push pushes the repository to the remote git server.
-func (r *Repository) Push(ctx context.Context, address, username, password string) error {
-	repo, err := git.PlainOpen(r.path)
-	if err != nil {
-		return fmt.Errorf("not a valid git repo or unable to open: %w", err)
-	}
-
-	// Configure new remote
-	remote, err := repo.Remote(onlineRemoteName)
-	if err != nil {
-		return fmt.Errorf("unable to find the git remote: %w", err)
-	}
-	if len(remote.Config().URLs) == 0 {
-		return fmt.Errorf("repository has zero remotes configured")
-	}
-	targetURL, err := transform.GitURL(address, remote.Config().URLs[0], username)
-	if err != nil {
-		return fmt.Errorf("unable to transform the git url: %w", err)
-	}
-	// Remove any preexisting offlineRemotes (happens when a retry is triggered)
-	err = repo.DeleteRemote(offlineRemoteName)
-	if err != nil && !errors.Is(err, git.ErrRemoteNotFound) {
-		return err
-	}
-	_, err = repo.CreateRemote(&config.RemoteConfig{
-		Name: offlineRemoteName,
-		URLs: []string{targetURL.String()},
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create offline remote: %w", err)
-	}
-
-	// Push to new remote
-	gitCred := http.BasicAuth{
-		Username: username,
-		Password: password,
-	}
-
-	// Fetch remote offline refs in case of old update or if multiple refs are specified in one package
-	// Attempt the fetch, if it fails, log a warning and continue trying to push (might as well try..)
-	fetchOptions := &git.FetchOptions{
-		RemoteName: offlineRemoteName,
-		Auth:       &gitCred,
-		RefSpecs: []config.RefSpec{
-			"refs/heads/*:refs/heads/*",
-			"refs/tags/*:refs/tags/*",
-		},
-	}
-	err = repo.FetchContext(ctx, fetchOptions)
-	if errors.Is(err, transport.ErrRepositoryNotFound) {
-		message.Debugf("Repo not yet available offline, skipping fetch...")
-	} else if errors.Is(err, git.ErrForceNeeded) {
-		message.Debugf("Repo fetch requires force, skipping fetch...")
-	} else if errors.Is(err, git.NoErrAlreadyUpToDate) {
-		message.Debugf("Repo already up-to-date, skipping fetch...")
-	} else if err != nil {
-		return fmt.Errorf("unable to fetch the git repo prior to push: %w", err)
-	}
-
-	// Push all heads and tags to the offline remote
-	err = repo.PushContext(ctx, &git.PushOptions{
-		RemoteName: offlineRemoteName,
-		Auth:       &gitCred,
-		// TODO: (@JEFFMCCOY) add the parsing for the `+` force prefix (see https://github.com/zarf-dev/zarf/issues/1410)
-		//Force: isForce,
-		// If a provided refspec doesn't push anything, it is just ignored
-		RefSpecs: []config.RefSpec{
-			"refs/heads/*:refs/heads/*",
-			"refs/tags/*:refs/tags/*",
-		},
-	})
-	if errors.Is(err, git.NoErrAlreadyUpToDate) {
-		message.Debug("Repo already up-to-date")
-	} else if errors.Is(err, plumbing.ErrObjectNotFound) {
-		return fmt.Errorf("unable to push repo due to likely shallow clone: %s", err.Error())
-	} else if err != nil {
-		return fmt.Errorf("unable to push repo to the gitops service: %s", err.Error())
-	}
-
-	return nil
-}
 func (r *Repository) checkoutRefAsBranch(ref string, branch plumbing.ReferenceName) error {
 	repo, err := git.PlainOpen(r.path)
 	if err != nil {

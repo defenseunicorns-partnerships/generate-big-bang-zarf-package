@@ -18,10 +18,9 @@ import (
 
 // TemplateChart generates a helm template from a given chart.
 func (h *Helm) TemplateChart(ctx context.Context) (manifest string, chartValues chartutil.Values, err error) {
-	spinner := message.NewProgressSpinner("Templating helm chart %s", h.chart.Name)
-	defer spinner.Stop()
+	message.Notef("Templating helm chart %s", h.chart.Name)
 
-	err = h.createActionConfig(h.chart.Namespace, spinner)
+	err = h.createActionConfig(h.chart.Namespace)
 
 	// Setup K8s connection.
 	if err != nil {
@@ -35,7 +34,6 @@ func (h *Helm) TemplateChart(ctx context.Context) (manifest string, chartValues 
 	client.Replace = true // Skip the name check.
 	client.ClientOnly = true
 	client.IncludeCRDs = true
-	// TODO: Further research this with regular/OCI charts
 	client.Verify = false
 	client.InsecureSkipTLSverify = config.CommonOptions.InsecureSkipTLSVerify
 	if h.kubeVersion != "" {
@@ -60,11 +58,6 @@ func (h *Helm) TemplateChart(ctx context.Context) (manifest string, chartValues 
 		return "", nil, fmt.Errorf("unable to load chart data: %w", err)
 	}
 
-	client.PostRenderer, err = h.newRenderer(ctx)
-	if err != nil {
-		return "", nil, fmt.Errorf("unable to create helm renderer: %w", err)
-	}
-
 	// Perform the loadedChart installation.
 	templatedChart, err := client.Run(loadedChart, chartValues)
 	if err != nil {
@@ -76,8 +69,6 @@ func (h *Helm) TemplateChart(ctx context.Context) (manifest string, chartValues 
 	for _, hook := range templatedChart.Hooks {
 		manifest += fmt.Sprintf("\n---\n%s", hook.Manifest)
 	}
-
-	spinner.Success()
 
 	return manifest, chartValues, nil
 }
