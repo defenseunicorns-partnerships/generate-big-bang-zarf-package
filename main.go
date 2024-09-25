@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2024-Present The Zarf Authors
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
 
-// Package main is the entrypoint for the Zarf binary.
+// Package main is the entrypoint
 package main
 
 import (

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2021-Present The Zarf Authors
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
 
 // Package bigbang contains the logic for installing Big Bang and Flux
 package bigbang
@@ -28,7 +28,6 @@ import (
 	"github.com/zarf-dev/zarf/src/config"
 	"github.com/zarf-dev/zarf/src/pkg/message"
 	"github.com/zarf-dev/zarf/src/pkg/utils"
-	"github.com/zarf-dev/zarf/src/pkg/variables"
 	"helm.sh/helm/v3/pkg/chartutil"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -154,7 +153,6 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		},
 		path.Join(tmpDir, bb),
 		path.Join(tmpDir, bb, "values"),
-		helm.WithVariableConfig(&variables.VariableConfig{}),
 		// Helm does a check to make sure your kube version is compatible
 		// since we're just templating the chart we just want to make sure we're above the minimum version
 		helm.WithKubeVersion(bbOpts.KubeVersion),
@@ -167,7 +165,7 @@ func Create(ctx context.Context, bbOpts Opts) error {
 
 	// Template the chart so we can see what GitRepositories are being referenced in the
 	// manifests created with the provided Helm.
-	template, _, err := helmCfg.TemplateChart(ctx)
+	template, _, err := helmCfg.TemplateChart()
 	if err != nil {
 		return fmt.Errorf("unable to template Big Bang Chart: %w", err)
 	}

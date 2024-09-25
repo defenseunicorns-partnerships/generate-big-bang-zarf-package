@@ -23,6 +23,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// Execute runs the root command, it's called from main.go
 func Execute(ctx context.Context) {
 	_, err := rootCmd.ExecuteContextC(ctx)
 	if err == nil {

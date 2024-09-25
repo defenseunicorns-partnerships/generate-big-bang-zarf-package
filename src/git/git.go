@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2021-Present The Zarf Authors
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
 
 // Package git contains functions for interacting with git repositories.
 package git
@@ -12,7 +12,6 @@ import (
 )
 
 const onlineRemoteName = "online-upstream"
-const offlineRemoteName = "offline-downstream"
 const emptyRef = ""
 
 // ParseRef parses the provided ref into a ReferenceName if it's not a hash.

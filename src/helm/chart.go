@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2021-Present The Zarf Authors
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
 
 // Package helm contains operations for working with helm charts.
 package helm
 
 import (
-	"context"
 	"fmt"
 
 	"helm.sh/helm/v3/pkg/action"
@@ -17,7 +16,7 @@ import (
 )
 
 // TemplateChart generates a helm template from a given chart.
-func (h *Helm) TemplateChart(ctx context.Context) (manifest string, chartValues chartutil.Values, err error) {
+func (h *Helm) TemplateChart() (manifest string, chartValues chartutil.Values, err error) {
 	message.Notef("Templating helm chart %s", h.chart.Name)
 
 	err = h.createActionConfig(h.chart.Namespace)

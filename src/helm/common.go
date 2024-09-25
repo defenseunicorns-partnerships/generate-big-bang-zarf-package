@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2021-Present The Zarf Authors
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
 
 // Package helm contains operations for working with helm charts.
 package helm
@@ -11,9 +11,6 @@ import (
 
 	"github.com/zarf-dev/zarf/src/api/v1alpha1"
 	"github.com/zarf-dev/zarf/src/config"
-	"github.com/zarf-dev/zarf/src/pkg/cluster"
-	"github.com/zarf-dev/zarf/src/pkg/variables"
-	"github.com/zarf-dev/zarf/src/types"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/cli"
@@ -25,8 +22,6 @@ type Helm struct {
 	chartPath  string
 	valuesPath string
 
-	cfg     *types.PackagerConfig
-	cluster *cluster.Cluster
 	timeout time.Duration
 	retries int
 
@@ -35,10 +30,8 @@ type Helm struct {
 	chartOverride   *chart.Chart
 	valuesOverrides map[string]any
 
-	settings       *cli.EnvSettings
-	actionConfig   *action.Configuration
-	variableConfig *variables.VariableConfig
-	state          *types.ZarfState
+	settings     *cli.EnvSettings
+	actionConfig *action.Configuration
 }
 
 // Modifier is a function that modifies the Helm config.
@@ -64,13 +57,6 @@ func New(chart v1alpha1.ZarfChart, chartPath string, valuesPath string, mods ...
 func WithKubeVersion(kubeVersion string) Modifier {
 	return func(h *Helm) {
 		h.kubeVersion = kubeVersion
-	}
-}
-
-// WithVariableConfig sets the variable config for the chart
-func WithVariableConfig(variableConfig *variables.VariableConfig) Modifier {
-	return func(h *Helm) {
-		h.variableConfig = variableConfig
 	}
 }
 
