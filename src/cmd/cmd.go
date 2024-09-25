@@ -37,9 +37,9 @@ func init() {
 	rootCmd.Flags().BoolVar(&bbOpts.SkipFlux, "skip-flux", false, "Skip the Flux component in the Big Bang package")
 	rootCmd.Flags().BoolVar(&bbOpts.Airgap, "airgap", true, "Whether or not this package is targeting an airgap environment")
 	rootCmd.Flags().StringVar(&bbOpts.Repo, "repo", "https://repo1.dso.mil/big-bang/bigbang", "The git repository to use for the Big Bang package")
-	// In Zarf we set the default kube version using ld flags. For simplicity we aren't introducing ld flags here
+	// In Zarf the default kube version using ld flags. For simplicity we aren't introducing ld flags in this project
 	// https://github.com/zarf-dev/zarf/blob/dd40adbd54412dd096ab88b5ce48cdeaa261e2fe/.goreleaser.yaml#L24-L25
-	// Kube version is set very high by default so we always met the chart minimum version requirements
+	// Instead Kube version is set very high by default so we always met the chart minimum version requirements
 	// There is an option to override in case big bang ever adds a maximum version requirement
 	rootCmd.Flags().StringVar(&bbOpts.KubeVersion, "kube-version", "1.99.0", "Override the default KubeVersion used during the helm template portion of generate")
 }
