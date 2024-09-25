@@ -23,7 +23,6 @@ type Helm struct {
 	valuesPath string
 
 	timeout time.Duration
-	retries int
 
 	kubeVersion string
 

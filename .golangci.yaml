@@ -29,7 +29,7 @@ linters-settings:
   goheader:
     template: |-
       SPDX-License-Identifier: Apache-2.0
-      SPDX-FileCopyrightText: 2021-Present The Zarf Authors
+      SPDX-FileCopyrightText: 2024-Present Defense Unicorns
   revive:
     rules:
       - name: blank-imports
