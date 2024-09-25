@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: 2024-Present Defense Unicorns
+
+// Package cmd contains the cobra command for the application
 package cmd
 
 import (
