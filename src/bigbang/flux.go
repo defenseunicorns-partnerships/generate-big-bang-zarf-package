@@ -110,11 +110,3 @@ func composeValues(hr helmReleaseDependency, secrets map[string]corev1.Secret, c
 
 	return valuesMap, nil
 }
-
-func getNamespacedNameFromMeta(o metav1.ObjectMeta) string {
-	return getNamespacedNameFromStr(o.Namespace, o.Name)
-}
-
-func getNamespacedNameFromStr(namespace, name string) string {
-	return fmt.Sprintf("%s.%s", namespace, name)
-}

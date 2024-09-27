@@ -30,6 +30,7 @@ import (
 	"github.com/zarf-dev/zarf/src/pkg/utils"
 	"helm.sh/helm/v3/pkg/chartutil"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 )
@@ -546,4 +547,12 @@ func getBBFile(ctx context.Context, gitPath, localPath, repo, version string) er
 		return err
 	}
 	return nil
+}
+
+func getNamespacedNameFromMeta(o metav1.ObjectMeta) string {
+	return getNamespacedNameFromStr(o.Namespace, o.Name)
+}
+
+func getNamespacedNameFromStr(namespace, name string) string {
+	return fmt.Sprintf("%s.%s", namespace, name)
 }
