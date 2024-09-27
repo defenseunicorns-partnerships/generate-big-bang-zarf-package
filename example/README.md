@@ -1,6 +1,14 @@
 # Example
 
-This example is intended to deploy a Big Bang repo on a k3d / k3s server. You can setup a local k3d cluster with the following command
+This example was generated using the following command
+
+```bash
+generate-big-bang-zarf-package 2.34.0 --values-file-manifests=values-files/kyverno.yaml,values-files/loki.yaml,values-files/neuvector.yaml
+```
+
+Note that the values-files directory was created before the generate command was run. The generated zarf.yaml changes depending on the values file manifests submitted as different values can enable different helm releases in Big Bang, which in turn require different repos and images. 
+
+This example is intended to deploy a Big Bang on a k3d or k3s server. You can setup a local k3d cluster with the following command
 
 ```bash
 k3d cluster create

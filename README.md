@@ -15,7 +15,7 @@ Example:
 generate-big-bang-zarf-package 2.34.0 --values-file-manifests=values-files/kyverno.yaml,values-files/loki.yaml,values-files/neuvector.yaml
 ```
 
-See the structure this command generated in the [example](example) folder. Note that the values-files were created before the generate command was run. Depending on the values file the generated zarf.yaml changes, as different values may enable different helm releases in Big Bang, which in turn require different repos and images. 
+See the structure this command generated in the [example](example) folder.
 
 Run `generate-big-bang-zarf-package -h` to see the full usage options
 
