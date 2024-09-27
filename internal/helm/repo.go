@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/defenseunicorns/generate-big-bang-zarf-package/src/git"
+	"github.com/defenseunicorns/generate-big-bang-zarf-package/internal/git"
 
 	"github.com/defenseunicorns/pkg/helpers/v2"
 	"helm.sh/helm/v3/pkg/action"
