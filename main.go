@@ -8,27 +8,31 @@ import (
 	"context"
 	"os"
 	"os/signal"
-	"syscall"
 
 	"github.com/defenseunicorns/generate-big-bang-zarf-package/src/cmd"
 )
 
+const (
+	exitCodeErr       = 1
+	exitCodeInterrupt = 2
+)
+
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 	signalCh := make(chan os.Signal, 1)
-	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(signalCh, os.Interrupt)
+	defer func() {
+		signal.Stop(signalCh)
+		cancel()
+	}()
 	go func() {
-		first := true
-		for {
-			<-signalCh
-			if first {
-				first = false
-				cancel()
-				continue
-			}
-			os.Exit(1)
+		select {
+		case <-signalCh: // first signal, cancel context
+			cancel()
+		case <-ctx.Done():
 		}
+		<-signalCh // second signal, hard exit
+		os.Exit(exitCodeInterrupt)
 	}()
 	cmd.Execute(ctx)
 }
