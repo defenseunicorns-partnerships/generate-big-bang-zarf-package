@@ -1,3 +1,4 @@
+# This was automatically generated using `generate-big-bang-zarf-package --values-file-manifests=values-files/kyverno.yaml,values-files/loki.yaml,values-files/neuvector.yaml`
 apiVersion: zarf.dev/v1alpha1
 kind: ZarfPackageConfig
 metadata:
