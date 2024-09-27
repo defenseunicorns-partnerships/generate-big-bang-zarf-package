@@ -19,6 +19,7 @@ import (
 
 	"github.com/defenseunicorns/generate-big-bang-zarf-package/src/helm"
 	"github.com/defenseunicorns/generate-big-bang-zarf-package/src/kustomize"
+	"github.com/google/uuid"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/defenseunicorns/pkg/helpers/v2"
@@ -250,7 +251,8 @@ func Create(ctx context.Context, bbOpts Opts) error {
 
 	outputName := "zarf.yaml"
 	if !helpers.InvalidPath(filepath.Join(bbOpts.BaseDir, outputName)) {
-		outputName = fmt.Sprintf("bigbang-%s", outputName)
+		uid := uuid.New()
+		outputName = fmt.Sprintf("zarf-%s.yaml", uid.String()[:8])
 		message.Warnf("zarf.yaml already exists, writing to %s", outputName)
 	}
 
