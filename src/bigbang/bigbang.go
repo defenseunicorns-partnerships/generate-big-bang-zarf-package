@@ -59,6 +59,7 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		APIVersion: v1alpha1.APIVersion,
 		Metadata: v1alpha1.ZarfMetadata{
 			Name: "bigbang",
+			// Zarf is switching it's verbiage from YOLO to airgap in the coming V1 release
 			YOLO: !bbOpts.Airgap,
 		},
 		Components: []v1alpha1.ZarfComponent{},
@@ -187,7 +188,6 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		return hrDependencies[i].metadata.Name < hrDependencies[j].metadata.Name
 	})
 
-	// Add wait actions for each of the helm releases in generally the order they should be deployed.
 	for _, hr := range hrDependencies {
 		// In Big Bang the metrics-server is a special case that only deploy if needed.
 		// The check it, we need to look for the existence of APIService instead of the HelmRelease, which
