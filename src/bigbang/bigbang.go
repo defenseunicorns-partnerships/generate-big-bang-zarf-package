@@ -326,7 +326,7 @@ func isValidVersion(version string) (bool, error) {
 // findBBResources takes a list of yaml objects (as a string) and
 // parses it for GitRepository objects that it then parses
 // to return the list of git repos and tags needed.
-func findBBResources(t string) (map[string]string, []HelmReleaseDependency, map[string]map[string]interface{}, error) {
+func findBBResources(t string) (map[string]string, []helmReleaseDependency, map[string]map[string]interface{}, error) {
 	// Break the template into separate resources.
 	yamls, err := utils.SplitYAMLToString([]byte(t))
 	if err != nil {
@@ -334,7 +334,7 @@ func findBBResources(t string) (map[string]string, []HelmReleaseDependency, map[
 	}
 
 	gitRepos := map[string]string{}
-	helmReleaseDeps := []HelmReleaseDependency{}
+	helmReleaseDeps := []helmReleaseDependency{}
 	helmReleaseValues := map[string]map[string]interface{}{}
 	secrets := map[string]corev1.Secret{}
 	configMaps := map[string]corev1.ConfigMap{}
@@ -361,7 +361,7 @@ func findBBResources(t string) (map[string]string, []HelmReleaseDependency, map[
 
 			srcNamespacedName := getNamespacedNameFromStr(h.Spec.Chart.Spec.SourceRef.Namespace, h.Spec.Chart.Spec.SourceRef.Name)
 
-			helmReleaseDeps = append(helmReleaseDeps, HelmReleaseDependency{
+			helmReleaseDeps = append(helmReleaseDeps, helmReleaseDependency{
 				typeMeta:               h.TypeMeta,
 				metadata:               h.ObjectMeta,
 				namespacedDependencies: deps,

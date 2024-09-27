@@ -18,8 +18,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-// HelmReleaseDependency is a struct that represents a Flux Helm Release from an HR DependsOn list.
-type HelmReleaseDependency struct {
+// helmReleaseDependency is a struct that represents a Flux Helm Release from an HR DependsOn list.
+type helmReleaseDependency struct {
 	typeMeta               metav1.TypeMeta
 	metadata               metav1.ObjectMeta
 	namespacedDependencies []string
@@ -68,7 +68,7 @@ func readFluxImages(fluxFilePath string) (images []string, err error) {
 }
 
 // composeValues composes values from a Flux HelmRelease and Secrets Map
-func composeValues(hr HelmReleaseDependency, secrets map[string]corev1.Secret, configMaps map[string]corev1.ConfigMap) (valuesMap chartutil.Values, err error) {
+func composeValues(hr helmReleaseDependency, secrets map[string]corev1.Secret, configMaps map[string]corev1.ConfigMap) (valuesMap chartutil.Values, err error) {
 	valuesMap = chartutil.Values{}
 
 	for _, v := range hr.valuesFrom {
