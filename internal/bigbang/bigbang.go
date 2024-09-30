@@ -156,8 +156,7 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		},
 		path.Join(tmpDir, bb),
 		path.Join(tmpDir, bb, "values"),
-		// Helm does a check to make sure your kube version is compatible
-		// since we're just templating the chart we just want to make sure we're above the minimum version
+		// Helm does a check to make sure your kube version is compatible with the chart version.
 		helm.WithKubeVersion(bbOpts.KubeVersion),
 	)
 
