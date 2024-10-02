@@ -9,7 +9,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/defenseunicorns/generate-big-bang-zarf-package/cmd"
+	"github.com/defenseunicorns-partnerships/generate-big-bang-zarf-package/cmd"
 )
 
 const (

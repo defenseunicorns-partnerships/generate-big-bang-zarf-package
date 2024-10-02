@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/defenseunicorns/generate-big-bang-zarf-package/internal/bigbang"
+	"github.com/defenseunicorns-partnerships/generate-big-bang-zarf-package/internal/bigbang"
 	"github.com/spf13/cobra"
 )
 
