@@ -1,5 +1,4 @@
-module github.com/defenseunicorns/generate-big-bang-zarf-package
-
+module github.com/defenseunicorns-partnerships/generate-big-bang-zarf-package
 go 1.23.1
 
 require (
