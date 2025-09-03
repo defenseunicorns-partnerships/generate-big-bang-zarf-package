@@ -23,7 +23,7 @@ Run `generate-big-bang-zarf-package -h` to see the full usage options
 
 An account on `https://registry1.dso.mil` to retrieve Big Bang images. You can register for an account [here](https://login.dso.mil/auth/realms/baby-yoda/protocol/openid-connect/registrations?client_id=account&response_type=code)
 
-By default, Big Bang uses images from [Iron Bank](https://p1.dso.mil/products/iron-bank) which will require you to set your login credentials for [Registry One](https://registry1.dso.mil) (see [pre-requisites](#prerequisites) for information on account setup).
+By default, Big Bang uses images from [Iron Bank](https://p1.dso.mil/products/iron-bank) which will require you to set your login credentials for [Registry One](https://registry1.dso.mil).
 
 ```bash
 # Authenticate to https://registry1.dso.mil/, then retrieve your CLI secret from your User Profile and run the following:

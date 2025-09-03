@@ -6,8 +6,6 @@ data:
   values.yaml: |
     gatekeeper:
       enabled: false
-    clusterAuditor:
-      enabled: false
     kyverno:
       enabled: true
     kyvernoPolicies:
