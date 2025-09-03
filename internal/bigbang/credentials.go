@@ -24,15 +24,15 @@ stringData:
       credentials:
         username: "###ZARF_GIT_PUSH###" # -- HTTP git credentials, both username and password must be provided
         password: "###ZARF_GIT_AUTH_PUSH###"
-		# -- Big Bang v1 Kyverno Support
-	kyvernopolicies:
-	  values:
-	    exclude:
-		  any:
-		  - resources:
-			namespaces:
-			  - zarf # don't have Kyverno prevent Zarf from doing zarf things
-	`
+    # -- Big Bang v1 Kyverno Support
+    kyvernopolicies:
+      values:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - zarf # don't have Kyverno prevent Zarf from doing zarf things
+`
 
 const bbV2ZarfCredentialsValues = `apiVersion: v1
 kind: Secret
@@ -55,8 +55,8 @@ stringData:
         exclude:
           any:
           - resources:
-            namespaces:
-            - zarf # don't have Kyverno prevent Zarf from doing zarf things
+              namespaces:
+              - zarf # don't have Kyverno prevent Zarf from doing zarf things
 `
 
 func manifestZarfCredentials(version string) (string, error) {
@@ -64,7 +64,7 @@ func manifestZarfCredentials(version string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if semverVersion.Major() == 2 {
+	if semverVersion.Major() >= 2 {
 		return bbV2ZarfCredentialsValues, nil
 	}
 	return bbV1ZarfCredentialsValues, nil
