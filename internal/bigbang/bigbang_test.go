@@ -167,19 +167,21 @@ func TestGetValuesFromManifest(t *testing.T) {
 func TestAddBigBangManifests(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name          string
-		airgap        bool
-		valuesFiles   []string
-		version       string
-		repo          string
-		expectedFiles []string
+		name                    string
+		airgap                  bool
+		valuesFiles             []string
+		additionalOverrideNames []string
+		version                 string
+		repo                    string
+		expectedFiles           []string
 	}{
 		{
-			name:        "Airgap false",
-			airgap:      false,
-			valuesFiles: []string{},
-			version:     "2.35.0",
-			repo:        "https://repo1.dso.mil/big-bang/bigbang",
+			name:                    "Airgap false",
+			airgap:                  false,
+			valuesFiles:             []string{},
+			additionalOverrideNames: []string{},
+			version:                 "2.35.0",
+			repo:                    "https://repo1.dso.mil/big-bang/bigbang",
 			expectedFiles: []string{
 				filepath.Join("testdata", "addBBManifests", "airgap-false", "bb-gitrepository.yaml"),
 				filepath.Join("testdata", "addBBManifests", "airgap-false", "bb-helmrelease.yaml"),
@@ -191,8 +193,9 @@ func TestAddBigBangManifests(t *testing.T) {
 			valuesFiles: []string{
 				filepath.Join("testdata", "addBBManifests", "airgap-true", "neuvector.yaml"),
 			},
-			version: "2.0.0",
-			repo:    "https://repo1.dso.mil/big-bang/bigbang",
+			additionalOverrideNames: []string{},
+			version:                 "2.0.0",
+			repo:                    "https://repo1.dso.mil/big-bang/bigbang",
 			expectedFiles: []string{
 				filepath.Join("testdata", "addBBManifests", "airgap-true", "bb-gitrepository.yaml"),
 				filepath.Join("testdata", "addBBManifests", "airgap-true", "bb-helmrelease.yaml"),
@@ -240,7 +243,7 @@ func TestAddBigBangManifests(t *testing.T) {
 				expectedManifests = append(expectedManifests, filepath.Join(tempDir, filepath.Base(f)))
 			}
 			expectedManifests = append(expectedManifests, tt.valuesFiles...)
-			manifest, err := createBBManifests(context.Background(), tt.airgap, tempDir, tt.valuesFiles, tt.version, tt.repo)
+			manifest, err := createBBManifests(context.Background(), tt.airgap, tempDir, tt.valuesFiles, tt.additionalOverrideNames, tt.version, tt.repo)
 			require.NoError(t, err)
 			require.ElementsMatch(t, expectedManifests, manifest.Files)
 
@@ -500,13 +503,14 @@ func TestCreate(t *testing.T) {
 			t.Parallel()
 			tempDir := t.TempDir()
 			bbOpts := Opts{
-				Airgap:              tt.airgap,
-				ValuesFileManifests: nil,
-				Version:             tt.version,
-				Repo:                tt.repo,
-				SkipFlux:            tt.skipFlux,
-				BaseDir:             tempDir,
-				KubeVersion:         "1.99.0",
+				Airgap:                  tt.airgap,
+				ValuesFileManifests:     nil,
+				AdditionalOverrideNames: nil,
+				Version:                 tt.version,
+				Repo:                    tt.repo,
+				SkipFlux:                tt.skipFlux,
+				BaseDir:                 tempDir,
+				KubeVersion:             "1.99.0",
 			}
 			err := Create(context.Background(), bbOpts)
 			require.NoError(t, err)

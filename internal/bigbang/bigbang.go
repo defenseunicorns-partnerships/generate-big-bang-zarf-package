@@ -38,13 +38,14 @@ import (
 
 // Opts contains the options for the bigbang.Create function
 type Opts struct {
-	ValuesFileManifests []string
-	SkipFlux            bool
-	Airgap              bool
-	Repo                string
-	Version             string
-	BaseDir             string
-	KubeVersion         string
+	ValuesFileManifests     []string
+	SkipFlux                bool
+	Airgap                  bool
+	Repo                    string
+	Version                 string
+	BaseDir                 string
+	KubeVersion             string
+	AdditionalOverrideNames []string
 }
 
 const (
@@ -239,7 +240,7 @@ func Create(ctx context.Context, bbOpts Opts) error {
 		return err
 	}
 
-	manifest, err := createBBManifests(ctx, bbOpts.Airgap, manifestDir, bbOpts.ValuesFileManifests, bbOpts.Version, bbOpts.Repo)
+	manifest, err := createBBManifests(ctx, bbOpts.Airgap, manifestDir, bbOpts.ValuesFileManifests, bbOpts.AdditionalOverrideNames, bbOpts.Version, bbOpts.Repo)
 	if err != nil {
 		return err
 	}
@@ -427,7 +428,7 @@ func findBBResources(t string) (map[string]string, []helmReleaseDependency, map[
 }
 
 // createBBManifests creates the manifests component for deploying Big Bang.
-func createBBManifests(ctx context.Context, airgap bool, manifestDir string, valuesFiles []string, version string, repo string) (v1alpha1.ZarfManifest, error) {
+func createBBManifests(ctx context.Context, airgap bool, manifestDir string, valuesFiles []string, additionalOverrideNames []string, version string, repo string) (v1alpha1.ZarfManifest, error) {
 	// Create a manifest component that we add to the zarf package for bigbang.
 	manifest := v1alpha1.ZarfManifest{
 		Name:      bb,
@@ -491,6 +492,20 @@ func createBBManifests(ctx context.Context, airgap bool, manifestDir string, val
 				Name: resource.GetName(),
 			})
 		}
+	}
+
+	// Add optional valuesFrom hooks to the bigbang helmrelease
+	for _, overrideName := range additionalOverrideNames {
+		hrValues = append(hrValues, fluxHelmCtrl.ValuesReference{
+			Kind:     "ConfigMap",
+			Name:     overrideName,
+			Optional: true,
+		})
+		hrValues = append(hrValues, fluxHelmCtrl.ValuesReference{
+			Kind:     "Secret",
+			Name:     overrideName,
+			Optional: true,
+		})
 	}
 
 	if spec, ok := helmReleaseObj["spec"].(map[string]interface{}); ok {
