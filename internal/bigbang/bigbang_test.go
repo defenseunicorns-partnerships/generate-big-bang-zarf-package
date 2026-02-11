@@ -394,6 +394,15 @@ func TestCreate(t *testing.T) {
 						HealthChecks: bbHealthChecks,
 					},
 				},
+				Variables: []v1alpha1.InteractiveVariable{
+					{
+						Variable: v1alpha1.Variable{
+							Name: "REGISTRY_PULL_USERNAME",
+						},
+						Description: "Username for pulling images from the Zarf registry",
+						Default:     "zarf-pull",
+					},
+				},
 			},
 		},
 		{
@@ -436,6 +445,15 @@ func TestCreate(t *testing.T) {
 							},
 						},
 						HealthChecks: bbHealthChecks,
+					},
+				},
+				Variables: []v1alpha1.InteractiveVariable{
+					{
+						Variable: v1alpha1.Variable{
+							Name: "REGISTRY_PULL_USERNAME",
+						},
+						Description: "Username for pulling images from the Zarf registry",
+						Default:     "zarf-pull",
 					},
 				},
 			},

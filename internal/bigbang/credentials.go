@@ -17,7 +17,7 @@ stringData:
   values.yaml: |
     registryCredentials:
       registry: "###ZARF_REGISTRY###"
-      username: "zarf-pull"
+      username: "###ZARF_VAR_REGISTRY_PULL_USERNAME###"
       password: "###ZARF_REGISTRY_AUTH_PULL###"
     git:
       existingSecret: "private-git-server"	# -- Chart created secrets with user defined values
@@ -43,7 +43,7 @@ stringData:
   values.yaml: |
     registryCredentials:
       registry: "###ZARF_REGISTRY###"
-      username: "zarf-pull"
+      username: "###ZARF_VAR_REGISTRY_PULL_USERNAME###"
       password: "###ZARF_REGISTRY_AUTH_PULL###"
     git:
       existingSecret: "private-git-server"	# -- Chart created secrets with user defined values

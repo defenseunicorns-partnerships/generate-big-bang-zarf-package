@@ -248,6 +248,19 @@ func Create(ctx context.Context, bbOpts Opts) error {
 
 	pkg.Components = append(pkg.Components, bbComponent)
 
+	// Add registry pull username variable for airgap deployments
+	if bbOpts.Airgap {
+		pkg.Variables = []v1alpha1.InteractiveVariable{
+			{
+				Variable: v1alpha1.Variable{
+					Name: "REGISTRY_PULL_USERNAME",
+				},
+				Description: "Username for pulling images from the Zarf registry",
+				Default:     "zarf-pull",
+			},
+		}
+	}
+
 	outputName := "zarf.yaml"
 	if !helpers.InvalidPath(filepath.Join(bbOpts.BaseDir, outputName)) {
 		uid := uuid.New()

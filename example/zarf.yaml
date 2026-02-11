@@ -2,6 +2,10 @@ apiVersion: zarf.dev/v1alpha1
 kind: ZarfPackageConfig
 metadata:
   name: bigbang
+variables:
+- name: REGISTRY_PULL_USERNAME
+  description: Username for pulling images from the Zarf registry
+  default: zarf-pull
 components:
 - name: flux
   required: true
